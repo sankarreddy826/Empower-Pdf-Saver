@@ -20,7 +20,6 @@ public class DocumentSaveController {
     @Value("${app.save.directory}")
     private String saveDirectory;
 
-
     @PostMapping("/save-to-network")
     public ResponseEntity<String> saveToNetwork(
             @RequestParam("file") MultipartFile file,
@@ -31,7 +30,7 @@ public class DocumentSaveController {
 
         try {
             Files.createDirectories(target.getParent());
-            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+            Files.write(target, file.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             log.info("Saved: {}", target);
             return ResponseEntity.ok("Saved: " + filename);
         } catch (IOException e) {
